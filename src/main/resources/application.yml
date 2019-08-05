@@ -1,0 +1,18 @@
+server:
+  port: 2222
+  
+spring:
+  application:
+    name: userservice
+
+eureka:
+  client:
+    enabled: true
+    # healthcheck:
+      # enabled: true
+    serviceUrl:
+      defaultZone: http://microservices-eureka-service:8761/eureka/
+  instance:
+     hostname: userservice
+   
+

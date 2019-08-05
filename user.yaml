@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userservice
+  labels:
+    app: msa-banking-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: user-service
+      app: msa-banking-app
+
+  template:
+    metadata:
+      name: user-msa-pod
+      labels:
+        name: user-service
+        app: msa-banking-app
+
+    spec:
+      containers:
+      - name: user-container
+        image: ${REPOSITORY_TAG}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 800m
+            memory: 600Mi
+  
+      imagePullSecrets:
+          - name: myregistrykey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userservice
+  labels:
+    name: user-service
+    app: msa-banking-app
+
+spec:
+  type: ClusterIP
+  ports:
+  -  protocol: TCP
+     targetPort: 2222
+     port: 2222
+
+  selector:
+    name: user-service
+    app: msa-banking-app

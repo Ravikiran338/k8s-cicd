@@ -1,0 +1,46 @@
+pipeline {
+	agent any
+	environment {
+    // You must set the following environment variables
+    // ORGANIZATION_NAME
+    // YOUR_DOCKERHUB_USERNAME (it doesn't matter if you don't have one)
+    //SERVICE_NAME = "fleetman-api-gateway"
+    REPOSITORY_TAG="$ravi338/msa-banking-aws:user-${BUILD_NUMBER}"
+	tools { 
+        maven 'Maven'  
+          }
+	stages {
+	         stage ('scm checkout') {
+			       steps {
+					checkout([$class: 'GitSCM', branches: [[name: '*/msa-develop-k8s-demo']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'tuleap', url: 'http://182.74.133.93/plugins/git/microservice-poc/msa-BE.git']]])
+	                      }
+                    }						  
+			 stage ('build') {
+			       steps {
+				           sh label: '', script: '''cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service
+                                                    mvn clean install
+			                                     '''
+					     }
+					}					
+			 stage ('deploy') {
+			      steps {
+				     sh label: '', script: '''
+                                              cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service					 
+											  docker rmi -f user
+											  docker build -t user .
+											  docker login
+                                              docker tag user ravi338/msa-banking-aws:user-${BUILD_NUMBER}
+                                              docker push ravi338/msa-banking-aws:user-${BUILD_NUMBER}
+											  //docker pull ravi338/msa-banking-aws:user-${BUILD_NUMBER}
+											                                            
+                                              //docker stop my-user
+                                              //docker rm -f my-user                                           
+                                              
+                                              //docker run --name=my-user -d -p 2222:2222 ravi338/msa-banking-aws:user-${BUILD_NUMBER}
+											  
+											  envsubst < /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service/user.yaml | kubectl apply -f -
+										   '''										   
+						}
+					}
+				}
+			}
