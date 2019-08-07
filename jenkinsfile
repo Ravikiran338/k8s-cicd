@@ -33,6 +33,7 @@ pipeline {
                                               #docker tag user ${REPOSITORY_TAG}
                                               docker push ${REPOSITORY_TAG}
 					      export KUBECONFIG=~/.kube/kube-config-eks	
+					      export PATH=$HOME/bin:$PATH
 					      echo `kubectl get svc`
 					      echo `kubectl get nodes`
 											  envsubst < ${WORKSPACE}/user.yaml | kubectl apply -f -
