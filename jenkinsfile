@@ -4,15 +4,15 @@ pipeline {
         maven 'Maven'  
           }
 	environment {
-    // You must set the following environment variables
-    // ORGANIZATION_NAME
-    // YOUR_DOCKERHUB_USERNAME (it doesn't matter if you don't have one)
-    //SERVICE_NAME = "fleetman-api-gateway"
-    REPOSITORY_TAG="$ravi338/msa-banking-aws:user-${BUILD_NUMBER}"
-	
+     DOCKERHUB_USERNAME = "ravi338"
+	 APP_NAME = "msa-banking-aws"
+     SERVICE_NAME = "user"
+     REPOSITORY_TAG="${DOCKERHUB_USERNAME}/${APP_NAME}-${SERVICE_NAME}:${BUILD_ID}"
+	 }
 	stages {
 	         stage ('scm checkout') {
 			       steps {
+				    cleanWs()
 					checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/k8s-cicd.git']]])
 	                      }
                     }						  
@@ -28,16 +28,11 @@ pipeline {
 				     sh label: '', script: '''
                                               cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service					 
 											  docker rmi -f user
-											  docker build -t user .
+											  docker build -t ${REPOSITORY_TAG}
 											  docker login
-                                              docker tag user ravi338/msa-banking-aws:user-${BUILD_NUMBER}
-                                              docker push ravi338/msa-banking-aws:user-${BUILD_NUMBER}
-											  //docker pull ravi338/msa-banking-aws:user-${BUILD_NUMBER}
-											                                            
-                                              //docker stop my-user
-                                              //docker rm -f my-user                                           
-                                              
-                                              //docker run --name=my-user -d -p 2222:2222 ravi338/msa-banking-aws:user-${BUILD_NUMBER}
+                                              docker tag user ${REPOSITORY_TAG}
+                                              docker push ${REPOSITORY_TAG}
+											  
 											  
 											  envsubst < /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service/user.yaml | kubectl apply -f -
 										   '''										   
@@ -45,4 +40,3 @@ pipeline {
 					}
 				}
 			}
-		}
