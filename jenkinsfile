@@ -28,7 +28,7 @@ pipeline {
 				     sh label: '', script: '''
                                               cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service					 
 											  docker rmi -f user
-											  docker build -t ${REPOSITORY_TAG}
+											  docker build -t ${REPOSITORY_TAG} .
 											  docker login
                                               docker tag user ${REPOSITORY_TAG}
                                               docker push ${REPOSITORY_TAG}
