@@ -18,7 +18,7 @@ pipeline {
                     }						  
 			 stage ('build') {
 			       steps {
-				           sh label: '', script: '''cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service
+				           sh label: '', script: '''cd ${WORKSPACE}
                                                     mvn clean install
 			                                     '''
 					     }
@@ -26,10 +26,10 @@ pipeline {
 			 stage ('deploy') {
 			      steps {
 				     sh label: '', script: '''
-                                              cd /var/lib/jenkins/workspace/msa-user-DSL/microservices-user-service					 
-											  docker rmi -f user
-											  docker build -t ${REPOSITORY_TAG} .
-											  docker login
+                                              cd ${WORKSPACE}					 
+					      #docker rmi -f user
+					      docker build -t ${REPOSITORY_TAG} .
+					      docker login
                                               #docker tag user ${REPOSITORY_TAG}
                                               docker push ${REPOSITORY_TAG}
 					      export KUBECONFIG=~/.kube/kube-config-eks	
