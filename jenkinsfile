@@ -34,7 +34,7 @@ pipeline {
                                               docker push ${REPOSITORY_TAG}
 											  
 											  
-											  envsubst < /var/lib/jenkins/workspace/k8s-cicd-pipeline/user.yaml | kubectl apply -f -
+											  envsubst < ${WORKSPACE}/k8s-cicd-pipeline/user.yaml | kubectl apply -f -
 										   '''										   
 						}
 					}
