@@ -13,7 +13,7 @@ pipeline {
 	stages {
 	         stage ('scm checkout') {
 			       steps {
-					checkout([$class: 'GitSCM', branches: [[name: '*/msa-develop-k8s-demo']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'tuleap', url: 'http://182.74.133.93/plugins/git/microservice-poc/msa-BE.git']]])
+					checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/k8s-cicd.git']]])
 	                      }
                     }						  
 			 stage ('build') {
