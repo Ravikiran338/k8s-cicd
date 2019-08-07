@@ -32,7 +32,8 @@ pipeline {
 											  docker login
                                               #docker tag user ${REPOSITORY_TAG}
                                               docker push ${REPOSITORY_TAG}
-					      export KUBECONFIG=~/.kube/kube-config-eks					  
+					      export KUBECONFIG=~/.kube/kube-config-eks	
+					      export aws-iam-authenticator=/root/bin/aws-iam-authenticator
 											  
 											  envsubst < ${WORKSPACE}/user.yaml | kubectl apply -f -
 										   '''										   
