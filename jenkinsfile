@@ -32,7 +32,7 @@ pipeline {
 											  docker login
                                               #docker tag user ${REPOSITORY_TAG}
                                               docker push ${REPOSITORY_TAG}
-											  
+					      export KUBECONFIG=~/.kube/kube-config-eks					  
 											  
 											  envsubst < ${WORKSPACE}/user.yaml | kubectl apply -f -
 										   '''										   
