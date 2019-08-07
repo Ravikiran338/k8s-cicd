@@ -1,14 +1,15 @@
 pipeline {
 	agent any
+	tools { 
+        maven 'Maven'  
+          }
 	environment {
     // You must set the following environment variables
     // ORGANIZATION_NAME
     // YOUR_DOCKERHUB_USERNAME (it doesn't matter if you don't have one)
     //SERVICE_NAME = "fleetman-api-gateway"
     REPOSITORY_TAG="$ravi338/msa-banking-aws:user-${BUILD_NUMBER}"
-	tools { 
-        maven 'Maven'  
-          }
+	
 	stages {
 	         stage ('scm checkout') {
 			       steps {
