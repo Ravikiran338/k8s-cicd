@@ -39,7 +39,7 @@ pipeline {
 						  envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f -
 						  
 						  python app.py
-						  if [ "$?" = "0" ]; then
+						  if [ "$?" == "0" ]; then
 						     echo "deployed service is running successfully"
 						  else
 							 echo "service status chack failed, please check, "
