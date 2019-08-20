@@ -36,7 +36,16 @@ pipeline {
 					      export PATH=$HOME/bin:$PATH
 					      echo `kubectl get svc`
 					      echo `kubectl get nodes`
-											  envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f -
+						  envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f -
+						  
+						  python app.py
+						  if [ "$?" = "0" ]; then
+						     echo "deployed service is running successfully"
+						  else
+							 echo "service status chack failed, please check, "
+							 echo "rolling back deployment, "
+							 kubectl rollout undo deployment.apps/userservice
+							fi 
 										   '''										   
 						}
 					}
