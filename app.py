@@ -31,7 +31,7 @@ except Exception as e:
     pprint(e)
     service_status = "failed"
     print(service_status)
-    sys.exit(1)
+    return 1
 if service_status == "success":
         pprint("retuning success status")
         sys.exit(0)
