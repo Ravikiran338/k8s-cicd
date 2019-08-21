@@ -47,6 +47,7 @@ pipeline {
 								else
 								   echo "service status chack failed, please check, "
 								   echo "rolling back deployment "
+								   export KUBECONFIG=~/.kube/kube-config-eks
 								   kubectl rollout undo deployment.apps/userservice
 								fi 
 								 """
