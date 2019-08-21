@@ -30,25 +30,25 @@ pipeline {
 					      #docker rmi -f ${SERVICE_NAME}
 					      docker build -t ${REPOSITORY_TAG} .
 					      docker login
-                                              #docker tag user ${REPOSITORY_TAG}
-                                              docker push ${REPOSITORY_TAG}
+					      docker push ${REPOSITORY_TAG}
+						  
 					      export KUBECONFIG=~/.kube/kube-config-eks	
 					      export PATH=$HOME/bin:$PATH
 					      echo `kubectl get svc`
 					      echo `kubectl get nodes`
+						  
 						  envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f - '''
 				      
-						  def result = sh returnStatus: true, script: 'python app.py'
-						  sh """ 
-						  echo ${result}
-						  if [ "${result}" == "0" ]; then
-						     echo "deployed service is running successfully"
-						  else
-							 echo "service status chack failed, please check, "
-							 echo "rolling back deployment, "
-							 kubectl rollout undo deployment.apps/userservice
+						  def status = sh(returnStatus: true, script: "python app.py")
+						  sh """
+							if [ "${status}" == "0" ]; then
+							   echo "deployed service is running successfully"
+							else
+							   echo "service status chack failed, please check, "
+							   echo "rolling back deployment "
+							   kubectl rollout undo deployment.apps/userservice
 							fi 
-							"""
+                                                      """
 																			   
 						}
 					}
