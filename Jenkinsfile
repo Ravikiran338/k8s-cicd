@@ -1,3 +1,4 @@
+@Library('pipeline-shared-library') _
 pipeline {
     agent any
     tools { 
@@ -52,6 +53,29 @@ pipeline {
 								   kubectl rollout undo deployment.apps/userservice
 								fi 
 								 """
+		         post
+   {
+     success
+       {
+         slackSend color: "good", message: "Hi , Microservices Build SUCCESS with your changes - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", channel: "k8s-slack-notify"
+         notifyBuild("SUCCESS", env.STAGE)
+       }
+     failure
+       {
+         slackSend color: "danger", message: "Hi Microservices Build FAILED with your changes - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", channel: "k8s-slack-notify"
+         notifyBuild('FAILED', env.STAGE)
+       }
+     aborted
+       {
+         slackSend color: "danger", message: "Hi , Microservices Build ABORTED with your changes - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", channel: "k8s-slack-notify"
+         notifyBuild('ABORTED', env.STAGE)
+       }
+     unstable
+       {
+         slackSend color: "warning", message: "Hi , Microservices Build FAILED with your changes - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", channel: "k8s-slack-notify"
+         notifyBuild('UNSTABLE', env.STAGE)
+       }
+   }
                                 }                                               
                         }
                     }
