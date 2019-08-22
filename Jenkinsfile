@@ -13,12 +13,14 @@ pipeline {
     stages {
              stage ('scm checkout') {
                    steps {
+		    env.STAGE = 'scm checkout'
                     cleanWs()
                     checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/k8s-cicd.git']]])
                           }
                     }                         
              stage ('build') {
                    steps {
+			   env.STAGE = 'build stage'
                            sh label: '', script: '''cd ${WORKSPACE}
                                                     mvn clean install
                                                  '''
@@ -26,6 +28,7 @@ pipeline {
                     }                   
              stage ('deploy') {
                   steps {
+	             env.STAGE = 'deploy'
                      sh label: '', script: '''
                                               cd ${WORKSPACE}                    
                           #docker rmi -f ${SERVICE_NAME}
