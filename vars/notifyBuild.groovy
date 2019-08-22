@@ -1,5 +1,5 @@
-def call(String buildStatus, String stageName, String git_author, String branch) {
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' Branch: ${branch}"
+def call(String buildStatus, String stageName) {
+  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
   if ((buildStatus == 'SUCCESS') || (buildStatus == 'SUCCEEDED')) {
     color = 'GREEN'
     colorCode = '#008000'
