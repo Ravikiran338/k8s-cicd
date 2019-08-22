@@ -53,12 +53,17 @@ pipeline {
 								   kubectl rollout undo deployment.apps/userservice
 								fi 
 								 """
-		         post
+								 }
+						 }
+				 }
+		 }
+    post
    {
      success
        {
          slackSend color: "good", message: "Hi , Microservices Build SUCCESS with your changes - ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", channel: "k8s-slack-notify"
          notifyBuild("SUCCESS", env.STAGE)
+         // Send notification to put-global-channel only for regression test build which uses release-xx.xx.xx.xx branch
        }
      failure
        {
@@ -76,8 +81,4 @@ pipeline {
          notifyBuild('UNSTABLE', env.STAGE)
        }
    }
-                                }                                               
-                        }
-                    }
-                }
-            }
+ }
