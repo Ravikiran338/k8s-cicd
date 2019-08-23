@@ -29,6 +29,6 @@ def call(String buildStatus, String stageName) {
       attachLog: true,
       subject: subject,
       body: body,
-     to: "ravikiran.moola@radiant.digital, swarna.vasireddy@radiant.digital"
+     to: "ravikiran.moola@radiant.digital"
     )
 }
