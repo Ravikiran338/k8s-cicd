@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO,
                 datefmt='%a, %d %b %Y %H:%M:%S',
                 filemode='w')
 service_status = ""
-url =  "http://aaf68ad18c58111e991c7029ea36050f-753228151.us-east-1.elb.amazonaws.com:8090/iindex.html"
+url =  "http://a8b3fc739c7ca11e991390ebbb047ab6-2067352867.us-east-1.elb.amazonaws.com:8090/index.html"
 headers = {'Content-Type': 'application/json', 'Accept':'application/json'}
 logging.info('service url: %s' %(url))
 try:
