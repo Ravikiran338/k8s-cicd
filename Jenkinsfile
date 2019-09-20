@@ -70,7 +70,7 @@ pipeline {
 						                            cd ${WORKSPACE}
 						                            chmod +x drivers/*
                                                     mvn clean install
-                                                    exit 1
+                    
                                                  '''
 												 currentBuild.result = 'SUCCESS'
 												                      echo "Service Deployed Successfully"
