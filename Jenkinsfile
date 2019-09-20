@@ -49,7 +49,7 @@ pipeline {
                           
                           envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f - 
 						                    '''
-			stage ('test automation') {
+	stage ('test automation') {
                    steps {
 			   script{
 			   env.STAGE = "test automation"
@@ -78,7 +78,8 @@ pipeline {
 						 }
 				 }
 		 }
-    post
+	  }
+  post
    {
      success
        {
@@ -102,5 +103,4 @@ pipeline {
          notifyBuild('UNSTABLE', env.STAGE)
        }
    }
- }
- }
+}
