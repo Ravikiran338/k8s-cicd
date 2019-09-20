@@ -36,8 +36,8 @@ pipeline {
 	             env.STAGE = "deploy"
 		   }
                      sh label: '', script: '''
-                                              cd ${WORKSPACE}                    
-                          #docker rmi -f ${SERVICE_NAME}
+                          cd ${WORKSPACE}      
+						  
                           docker build -t ${REPOSITORY_TAG} .
                           docker login
                           docker push ${REPOSITORY_TAG}
@@ -47,21 +47,33 @@ pipeline {
                           echo `kubectl get svc`
                           echo `kubectl get nodes`
                           
-                          envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f - '''
-						  script{
-                      
-							  def status = sh(returnStatus: true, script: "python app.py")
-							  sh """
-								if [ "${status}" == "0" ]; then
-								   echo "deployed service is running successfully"
-								else
-								   echo "service status chack failed, please check, "
-								   echo "rolling back deployment "
-								   export KUBECONFIG=~/.kube/kube-config-eks
-								   export PATH=$HOME/bin:$PATH
-								   kubectl rollout undo deployment.apps/userservice
-								fi 
-								 """
+                          envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f - 
+						                    '''
+			stage ('test automation') {
+                   steps {
+			   script{
+			   env.STAGE = "test automation"
+						  try{
+                           sh label: '', script: '''
+						                            cd ${WORKSPACE}
+						                            chmod +x drivers/*
+                                                    mvn clean install
+                                                
+                                                 '''
+												 currentBuild.result = 'SUCCESS'
+												                      echo "Service Deployed Successfully"
+							}
+				                                 catch(Exception e){
+					                             currentBuild.result = 'FAILURE'
+					
+					                             sh label: '', script: '''
+					                                                   echo "Rolling back Deployment "
+		                                                               export KUBECONFIG=~/.kube/kube-config-eks
+		                                                               export PATH=$HOME/bin:$PATH
+		                                                               kubectl rollout undo deployment.apps/userservice
+                                                                       '''
+				 }
+				        echo "${currentBuild.result}"
 								 }
 						 }
 				 }
