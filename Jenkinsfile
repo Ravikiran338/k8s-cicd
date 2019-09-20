@@ -1,8 +1,8 @@
 @Library('pipeline-shared-library') _
 pipeline {
     agent any
-    tools { 
-        maven 'Maven'  
+    tools {
+        maven 'Maven'
           }
     environment {
      DOCKERHUB_USERNAME = "ravi338"
@@ -19,7 +19,7 @@ pipeline {
                     cleanWs()
                     checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/k8s-cicd-user.git']]])
                           }
-                    }                         
+                    }
              stage ('build') {
                    steps {
 			   script{
@@ -29,45 +29,55 @@ pipeline {
                                                     mvn clean install
                                                  '''
                          }
-                    }                   
+                    }
              stage ('deploy') {
                   steps {
 		   script{
 	             env.STAGE = "deploy"
 		   }
                      sh label: '', script: '''
-                          cd ${WORKSPACE}      
-						  
+                          cd ${WORKSPACE}
+
                           docker build -t ${REPOSITORY_TAG} .
                           docker login
                           docker push ${REPOSITORY_TAG}
-                          
-                          export KUBECONFIG=~/.kube/kube-config-eks 
+
+                          export KUBECONFIG=~/.kube/kube-config-eks
                           export PATH=$HOME/bin:$PATH
                           echo `kubectl get svc`
                           echo `kubectl get nodes`
-                          
-                          envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f - 
+
+                          envsubst < ${WORKSPACE}/${SERVICE_NAME}.yaml | kubectl apply -f -
 						                    '''
                       }
                 }
-			stage ('test automation') {
+        stage ('testing scm checkout') {
+                      steps {
+                script{
+                env.STAGE = "testing scm checkout"
+                }
+                       cleanWs()
+                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/K8s-user-testscripts.git']]])
+                             }
+                       }
+
+		   stage ('test automation execution') {
                    steps {
 			   script{
-			   env.STAGE = "test automation"
+			   env.STAGE = "test automation execution"
 						  try{
                            sh label: '', script: '''
 						                            cd ${WORKSPACE}
 						                            chmod +x drivers/*
                                                     mvn clean install
-                                                
+
                                                  '''
 												 currentBuild.result = 'SUCCESS'
 												                      echo "Service Deployed Successfully"
 							}
 				                                 catch(Exception e){
 					                             currentBuild.result = 'FAILURE'
-					
+
 					                             sh label: '', script: '''
 					                                                   echo "Rolling back Deployment "
 		                                                               export KUBECONFIG=~/.kube/kube-config-eks
