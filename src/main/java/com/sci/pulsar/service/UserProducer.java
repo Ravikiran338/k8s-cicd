@@ -45,17 +45,17 @@ public class UserProducer {
 		log.info("Created producer for the topic {}", TOPIC_NAME);
 
 		// Send 10 test messages
-			String content = String.format("hello-pulsar-%d", email);
+			//String content = String.format("hello-pulsar-%d", email);
 
 			// Build a message object
-			Message<byte[]> msg = MessageBuilder.create().setContent(content.getBytes()).build();
+			Message<byte[]> msg = MessageBuilder.create().setContent(email.getBytes()).build();
 
 			// Send each message and log message content and ID when
 			// successfully received
 			try {
 				MessageId msgId = producer.send(msg);
 
-				log.info("Published message '{}' with the ID {}", content, msgId);
+				log.info("Published message '{}' with the ID {}", email, msgId);
 			} catch (PulsarClientException e) {
 				log.error(e.getMessage());
 			}
