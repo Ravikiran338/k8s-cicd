@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.sci.pulsar.service.UserProducer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -74,7 +74,20 @@ public class UserController {
 	public Mono<Status> createUser(@RequestBody UserBean user) {
 		LOGGER.info("create: {}", user);
 		Mono<UserBean> userMono = Mono.just(user);
-		return userService.createUser(userMono);
+		Mono<Status> userStatus = userService.createUser(userMono);
+		userStatus.subscribe(status -> {
+			if(ServiceStatus.SUCCESS.getStatusCode().equalsIgnoreCase(status.getStatusCode())){
+				try {
+					new UserProducer().produceUserMessage(user.getEmail());
+					LOGGER.info("createUser - invoking pulsar producer ");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					LOGGER.info("createUser -- exception",e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		});
+		return userStatus;
 	}
 	
 	@PutMapping
