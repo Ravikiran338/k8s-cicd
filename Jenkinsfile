@@ -57,7 +57,7 @@ pipeline {
                 env.STAGE = "testing scm checkout"
                 }
                        cleanWs()
-                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'GitHub-Ravi', url: 'https://github.com/Ravikiran338/K8s-user-testscripts.git']]])
+                       checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'tuleap', url: 'http://182.74.133.93/plugins/git/microservice-poc/user-testscripts.git']]])
                              }
                        }
 
