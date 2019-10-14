@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UserProducer {
 	private static final Logger log = LoggerFactory.getLogger(UserProducer.class);
-	private static final String SERVICE_URL = "pulsar://18.213.172.32:6650";
+	private static final String SERVICE_URL = "pulsar://34.206.196.97:6650";
     private static final String TOPIC_NAME = "user-topic";
 	
    public UserProducer(){
