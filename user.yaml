@@ -25,8 +25,8 @@ spec:
         imagePullPolicy: Always
         resources:
           requests:
-            cpu: 800m
-            memory: 600Mi
+            cpu: 500m
+            memory: 500Mi
   
       imagePullSecrets:
           - name: myregistrykey
