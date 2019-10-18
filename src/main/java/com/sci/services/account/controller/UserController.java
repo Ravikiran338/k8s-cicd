@@ -75,7 +75,7 @@ public class UserController {
 		LOGGER.info("create: {}", user);
 		Mono<UserBean> userMono = Mono.just(user);
 		Mono<Status> userStatus = userService.createUser(userMono);
-		userStatus.subscribe(status -> {
+	/*	userStatus.subscribe(status -> {
 			if(ServiceStatus.SUCCESS.getStatusCode().equalsIgnoreCase(status.getStatusCode())){
 				try {
 					new UserProducer().produceUserMessage(user.getEmail());
@@ -86,7 +86,15 @@ public class UserController {
 					e.printStackTrace();
 				}
 			}
-		});
+		});*/
+		try {
+			new UserProducer().produceUserMessage(user.getEmail());
+			LOGGER.info("createUser - invoking pulsar producer ");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			LOGGER.info("createUser -- exception",e.getMessage());
+			e.printStackTrace();
+		}
 		return userStatus;
 	}
 	
