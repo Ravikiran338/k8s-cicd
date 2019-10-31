@@ -13,6 +13,8 @@ import org.apache.pulsar.client.api.PulsarClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sci.services.account.model.UserBean;
+
 /**
  * @author mn259
  *
@@ -27,7 +29,7 @@ public class UserProducer {
     }
     
 	@SuppressWarnings("deprecation")
-	public void produceUserMessage(String email) throws PulsarClientException {
+	public void produceUserMessage(UserBean user) throws PulsarClientException {
 		// Create a Pulsar client instance. A single instance can be shared
 		// across many
 		// producers and consumer within the same application
@@ -48,14 +50,14 @@ public class UserProducer {
 			//String content = String.format("hello-pulsar-%d", email);
 
 			// Build a message object
-			Message<byte[]> msg = MessageBuilder.create().setContent(email.getBytes()).build();
+			Message<byte[]> msg = MessageBuilder.create().setContent(user.toString().getBytes()).build();
 
 			// Send each message and log message content and ID when
 			// successfully received
 			try {
 				MessageId msgId = producer.send(msg);
 
-				log.info("Published message '{}' with the ID {}", email, msgId);
+				log.info("Published message '{}' with the ID {}", user, msgId);
 			} catch (PulsarClientException e) {
 				log.error(e.getMessage());
 			}

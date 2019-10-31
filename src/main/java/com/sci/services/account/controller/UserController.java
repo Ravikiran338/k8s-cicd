@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.sci.pulsar.service.UserProducer;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sci.pulsar.service.UserProducer;
 import com.sci.services.account.model.Status;
 import com.sci.services.account.model.User;
 import com.sci.services.account.model.UserBean;
@@ -24,11 +21,9 @@ import com.sci.services.account.repository.DeactivateUserService;
 import com.sci.services.account.repository.GetUserService;
 import com.sci.services.account.repository.UpdateUserService;
 import com.sci.services.account.repository.UserService;
-import com.sci.services.constants.ServiceStatus;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.util.List;
-import java.util.ArrayList;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -88,7 +83,7 @@ public class UserController {
 			}
 		});*/
 		try {
-			new UserProducer().produceUserMessage(user.getEmail());
+			new UserProducer().produceUserMessage(user);
 			LOGGER.info("createUser - invoking pulsar producer ");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
