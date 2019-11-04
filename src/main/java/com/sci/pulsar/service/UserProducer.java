@@ -30,11 +30,12 @@ public class UserProducer {
     
 	@SuppressWarnings("deprecation")
 	public void produceUserMessage(UserBean user) throws PulsarClientException {
+		log.info("Producing User for the topic {}", user.toString());
 		// Create a Pulsar client instance. A single instance can be shared
 		// across many
 		// producers and consumer within the same application
 		PulsarClient client = PulsarClient.builder().serviceUrl(SERVICE_URL).build();
-
+		log.info("Producing User for the user topic {}", user.toString());
 		// Here you get the chance to configure producer specific settings
 		Producer<byte[]> producer = client.newProducer()
 				// Set the topic
