@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<pulsar-client.version>2.1.1-incubating</pulsar-client.version>
+		<pulsar-client.version>2.7.5</pulsar-client.version>
 		<maven-jar-plugin.version>2.6</maven-jar-plugin.version>
 	</properties>
 
